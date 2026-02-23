@@ -6,13 +6,9 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Samir-Minddeft/go-backend-boilerplate/utils/types"
 	"github.com/go-playground/validator/v10"
 )
-
-type Response struct {
-	Status string `json:"status"`
-	Error  string `json:"error"`
-}
 
 const (
 	StatusOk    = "OK"
@@ -26,14 +22,14 @@ func WriteJson(w http.ResponseWriter, status int, data any) error {
 	return json.NewEncoder(w).Encode(data)
 }
 
-func GeneralError(err error) Response {
-	return Response{
+func GeneralError(err error) types.Response {
+	return types.Response{
 		Status: StatusError,
 		Error:  err.Error(),
 	}
 }
 
-func ValidationError(errs validator.ValidationErrors) Response {
+func ValidationError(errs validator.ValidationErrors) types.Response {
 	var errMsg []string
 
 	for _, err := range errs {
@@ -46,14 +42,14 @@ func ValidationError(errs validator.ValidationErrors) Response {
 		}
 	}
 
-	return Response{
+	return types.Response{
 		Status: StatusError,
 		Error:  strings.Join(errMsg, ", "),
 	}
 }
 
-func ValidationErrors(errs []string) Response {
-	return Response{
+func ValidationErrors(errs []string) types.Response {
+	return types.Response{
 		Status: StatusError,
 		Error:  strings.Join(errs, ", "),
 	}
