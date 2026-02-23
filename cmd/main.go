@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/Samir-Minddeft/go-backend-boilerplate/api/router"
 	"github.com/Samir-Minddeft/go-backend-boilerplate/config"
 	"github.com/gin-gonic/gin"
@@ -17,6 +19,13 @@ func main() {
 	//Router setup
 	r := gin.Default()
 	router.Router(r)
-	r.Run(":3000")
+
+	// Get port from env
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3000"
+	}
+
+	r.Run(":" + port)
 
 }
