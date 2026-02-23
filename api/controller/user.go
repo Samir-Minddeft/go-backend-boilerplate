@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Samir-Minddeft/go-backend-boilerplate/api/models"
 	"github.com/Samir-Minddeft/go-backend-boilerplate/config"
-	"github.com/Samir-Minddeft/go-backend-boilerplate/models"
 	"github.com/Samir-Minddeft/go-backend-boilerplate/utils/helper"
 	"github.com/Samir-Minddeft/go-backend-boilerplate/utils/response"
 	"github.com/gin-gonic/gin"
@@ -17,7 +17,7 @@ import (
 
 func GetUser(c *gin.Context) {
 	user := models.User{}
-	config.DB.First(&user, c.Param("id"))
+	config.DB.Select("id, name, email, phone, role, is_active").First(&user, c.Param("id"))
 
 	if user.Id == 0 {
 		response.WriteJson(c.Writer, http.StatusNotFound, response.GeneralError(errors.New("user not found")))
@@ -32,7 +32,7 @@ func GetUser(c *gin.Context) {
 func GetAllUsers(c *gin.Context) {
 
 	users := []models.User{}
-	res := config.DB.Find(&users)
+	res := config.DB.Select("id, name, email, phone, role, is_active").Find(&users)
 
 	if res.Error != nil {
 		response.WriteJson(c.Writer, http.StatusInternalServerError, response.GeneralError(res.Error))
@@ -82,7 +82,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	hashedPassword, salt, err := helper.HashPassword(user.Password)
+	hashedPassword, salt, err := helper.HashPassword(user.Password, "")
 	if err != nil {
 		response.WriteJson(c.Writer, http.StatusInternalServerError, response.GeneralError(err))
 		return
@@ -123,7 +123,7 @@ func CreateUser(c *gin.Context) {
 
 func UpdateUser(c *gin.Context) {
 	user := models.User{}
-	config.DB.First(&user, c.Param("id"))
+	config.DB.Select("id, name, email, phone, role, is_active").First(&user, c.Param("id"))
 
 	if user.Id == 0 {
 		response.WriteJson(c.Writer, http.StatusNotFound, response.GeneralError(errors.New("user not found")))
@@ -140,7 +140,7 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	config.DB.Save(&user)
+	config.DB.Select("id, name, email, phone, role, is_active").Save(&user)
 
 	response.WriteJson(c.Writer, http.StatusOK, gin.H{
 		"message": "User updated successfully",
@@ -150,7 +150,7 @@ func UpdateUser(c *gin.Context) {
 
 func DeleteUser(c *gin.Context) {
 	user := models.User{}
-	config.DB.First(&user, c.Param("id"))
+	config.DB.Select("id, name, email, phone, role, is_active").First(&user, c.Param("id"))
 
 	if user.Id == 0 {
 		response.WriteJson(c.Writer, http.StatusNotFound, response.GeneralError(errors.New("user not found")))

@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/Samir-Minddeft/go-backend-boilerplate/models"
+	"github.com/Samir-Minddeft/go-backend-boilerplate/api/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

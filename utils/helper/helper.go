@@ -54,10 +54,14 @@ func GenerateRandomSalt(size int) (string, error) {
 }
 
 // hashes a password using Argon2id with a random salt
-func HashPassword(password string) (string, string, error) {
-	salt, err := GenerateRandomSalt(16)
-	if err != nil {
-		return "", "", err
+func HashPassword(password string, salt string) (string, string, error) {
+	var newSalt string
+	if salt == "" {
+		newSalt, err := GenerateRandomSalt(16)
+		if err != nil {
+			return "", "", err
+		}
+		salt = newSalt
 	}
 
 	decodedSalt, err := base64.RawStdEncoding.DecodeString(salt)
@@ -68,7 +72,7 @@ func HashPassword(password string) (string, string, error) {
 	hash := argon2.IDKey([]byte(password), decodedSalt, ArgonTime, ArgonMemory, ArgonThreads, ArgonKeyLen)
 	encodedHash := base64.RawStdEncoding.EncodeToString(hash)
 
-	return encodedHash, salt, nil
+	return encodedHash, newSalt, nil
 }
 
 // checks if the provided password matches the stored hash and salt

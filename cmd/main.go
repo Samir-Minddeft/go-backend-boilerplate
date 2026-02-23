@@ -1,8 +1,9 @@
 package main
 
 import (
+	"github.com/Samir-Minddeft/go-backend-boilerplate/api/router"
 	"github.com/Samir-Minddeft/go-backend-boilerplate/config"
-	"github.com/Samir-Minddeft/go-backend-boilerplate/routes"
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
@@ -13,7 +14,9 @@ func main() {
 	// DB setup
 	config.Connect()
 
-	// Route setup
-	router := routes.UserRoute()
-	router.Run(":3000")
+	//Router setup
+	r := gin.Default()
+	router.Router(r)
+	r.Run(":3000")
+
 }
